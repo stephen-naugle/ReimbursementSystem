@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Ticket.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ReimbursementSystem</a> &gt; <a href="index.source.html" class="el_package">com.reimbursement.model</a> &gt; <span class="el_source">Ticket.java</span></div><h1>Ticket.java</h1><pre class="source lang-java linenums">package com.reimbursement.model;
+
+public class Ticket {
+
+	int reimbId;
+	int authorId;
+	int resolverId;
+	double amount;
+	String timeSubmitted;
+	String timeResolved;
+	String ticketDescription;
+	ReimbursementStatusEnum status;
+	ReimbursementTypeEnum type;
+	
+	
+<span class="fc" id="L16">	public Ticket() {</span>
+		
+<span class="fc" id="L18">	}</span>
+
+	/**
+	 * constructor for when retrieving a Ticket from the DB
+	 * @param reimbId
+	 * @param authorId
+	 * @param resolverId
+	 * @param amount
+	 * @param timeSubmitted
+	 * @param timeResolved
+	 * @param ticketDescription
+	 * @param status
+	 * @param type
+	 */
+	public Ticket(int reimbId, int authorId, int resolverId, double amount, String timeSubmitted, String timeResolved,
+			String ticketDescription, ReimbursementStatusEnum status, ReimbursementTypeEnum type) {
+<span class="nc" id="L34">		super();</span>
+<span class="nc" id="L35">		this.reimbId = reimbId;</span>
+<span class="nc" id="L36">		this.authorId = authorId;</span>
+<span class="nc" id="L37">		this.resolverId = resolverId;</span>
+<span class="nc" id="L38">		this.amount = amount;</span>
+<span class="nc" id="L39">		this.timeSubmitted = timeSubmitted;</span>
+<span class="nc" id="L40">		this.timeResolved = timeResolved;</span>
+<span class="nc" id="L41">		this.ticketDescription = ticketDescription;</span>
+<span class="nc" id="L42">		this.status = status;</span>
+<span class="nc" id="L43">		this.type = type;</span>
+<span class="nc" id="L44">	}</span>
+
+	/**
+	 * user does not choose who the resolver is, nor do they choose the status of their ticket upon creation, this is done by the DB, which sets 		it to PENDING by default upon persistence
+	 * @param authorId
+	 * @param amount
+	 * @param ticketDescription
+	 * @param type
+	 */
+	public Ticket(int authorId, double amount, String ticketDescription, ReimbursementTypeEnum type) {
+<span class="nc" id="L54">		super();</span>
+<span class="nc" id="L55">		this.authorId = authorId;</span>
+<span class="nc" id="L56">		this.amount = amount;</span>
+<span class="nc" id="L57">		this.ticketDescription = ticketDescription;</span>
+<span class="nc" id="L58">		this.status = ReimbursementStatusEnum.PENDING;</span>
+<span class="nc" id="L59">		this.type = type;</span>
+<span class="nc" id="L60">	}</span>
+
+	
+	public int getStatusId() {
+<span class="nc bnc" id="L64" title="All 4 branches missed.">		switch(this.getStatus()) {</span>
+		case PENDING:
+<span class="nc" id="L66">			return 0;</span>
+		case APPROVED:
+<span class="nc" id="L68">			return 1;</span>
+		case DENIED:
+<span class="nc" id="L70">			return 2;</span>
+		}
+		
+<span class="nc" id="L73">		return 0;</span>
+	}
+	
+	
+	// Getters and Setters --------------------------------------------------------------------------------------
+	
+	public int getReimbId() {
+<span class="nc" id="L80">		return reimbId;</span>
+	}
+
+	public void setReimbId(int reimbId) {
+<span class="nc" id="L84">		this.reimbId = reimbId;</span>
+<span class="nc" id="L85">	}</span>
+
+	public int getAuthorId() {
+<span class="nc" id="L88">		return authorId;</span>
+	}
+
+	public void setAuthorId(int authorId) {
+<span class="nc" id="L92">		this.authorId = authorId;</span>
+<span class="nc" id="L93">	}</span>
+
+	public int getResolverId() {
+<span class="nc" id="L96">		return resolverId;</span>
+	}
+
+	public void setResolverId(int resolverId) {
+<span class="nc" id="L100">		this.resolverId = resolverId;</span>
+<span class="nc" id="L101">	}</span>
+
+	public double getAmount() {
+<span class="nc" id="L104">		return amount;</span>
+	}
+
+	public void setAmount(double amount) {
+<span class="nc" id="L108">		this.amount = amount;</span>
+<span class="nc" id="L109">	}</span>
+
+	public String getTimeSubmitted() {
+<span class="nc" id="L112">		return timeSubmitted;</span>
+	}
+
+	public void setTimeSubmitted(String timeSubmitted) {
+<span class="nc" id="L116">		this.timeSubmitted = timeSubmitted;</span>
+<span class="nc" id="L117">	}</span>
+
+	public String getTimeResolved() {
+<span class="nc" id="L120">		return timeResolved;</span>
+	}
+
+	public void setTimeResolved(String timeResolved) {
+<span class="nc" id="L124">		this.timeResolved = timeResolved;</span>
+<span class="nc" id="L125">	}</span>
+
+	public String getTicketDescription() {
+<span class="nc" id="L128">		return ticketDescription;</span>
+	}
+
+	public void setTicketDescription(String ticketDescription) {
+<span class="nc" id="L132">		this.ticketDescription = ticketDescription;</span>
+<span class="nc" id="L133">	}</span>
+
+	public ReimbursementStatusEnum getStatus() {
+<span class="nc" id="L136">		return status;</span>
+	}
+
+	public void setStatus(ReimbursementStatusEnum status) {
+<span class="nc" id="L140">		this.status = status;</span>
+<span class="nc" id="L141">	}</span>
+
+	public ReimbursementTypeEnum getType() {
+<span class="nc" id="L144">		return type;</span>
+	}
+
+	public void setType(ReimbursementTypeEnum type) {
+<span class="nc" id="L148">		this.type = type;</span>
+<span class="nc" id="L149">	}</span>
+
+	
+	// hashCode(), equals(), and toString() --------------------------------------------------------------------
+	
+	@Override
+	public int hashCode() {
+<span class="nc" id="L156">		final int prime = 31;</span>
+<span class="nc" id="L157">		int result = 1;</span>
+		long temp;
+<span class="nc" id="L159">		temp = Double.doubleToLongBits(amount);</span>
+<span class="nc" id="L160">		result = prime * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</span>
+<span class="nc" id="L161">		result = prime * result + authorId;</span>
+<span class="nc" id="L162">		result = prime * result + reimbId;</span>
+<span class="nc" id="L163">		result = prime * result + resolverId;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">		result = prime * result + ((status == null) ? 0 : status.hashCode());</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">		result = prime * result + ((ticketDescription == null) ? 0 : ticketDescription.hashCode());</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">		result = prime * result + ((timeResolved == null) ? 0 : timeResolved.hashCode());</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">		result = prime * result + ((timeSubmitted == null) ? 0 : timeSubmitted.hashCode());</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">		result = prime * result + ((type == null) ? 0 : type.hashCode());</span>
+<span class="nc" id="L169">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="nc bnc" id="L174" title="All 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L175">			return true;</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L177">			return false;</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L179">			return false;</span>
+<span class="nc" id="L180">		Ticket other = (Ticket) obj;</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))</span>
+<span class="nc" id="L182">			return false;</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">		if (authorId != other.authorId)</span>
+<span class="nc" id="L184">			return false;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">		if (reimbId != other.reimbId)</span>
+<span class="nc" id="L186">			return false;</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">		if (resolverId != other.resolverId)</span>
+<span class="nc" id="L188">			return false;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">		if (status != other.status)</span>
+<span class="nc" id="L190">			return false;</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">		if (ticketDescription == null) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">			if (other.ticketDescription != null)</span>
+<span class="nc" id="L193">				return false;</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">		} else if (!ticketDescription.equals(other.ticketDescription))</span>
+<span class="nc" id="L195">			return false;</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">		if (timeResolved == null) {</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">			if (other.timeResolved != null)</span>
+<span class="nc" id="L198">				return false;</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">		} else if (!timeResolved.equals(other.timeResolved))</span>
+<span class="nc" id="L200">			return false;</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">		if (timeSubmitted == null) {</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">			if (other.timeSubmitted != null)</span>
+<span class="nc" id="L203">				return false;</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">		} else if (!timeSubmitted.equals(other.timeSubmitted))</span>
+<span class="nc" id="L205">			return false;</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">		if (type != other.type)</span>
+<span class="nc" id="L207">			return false;</span>
+<span class="nc" id="L208">		return true;</span>
+	}
+
+	@Override
+	public String toString() {
+<span class="nc" id="L213">		return &quot;Ticket [reimbId=&quot; + reimbId + &quot;, authorId=&quot; + authorId + &quot;, resolverId=&quot; + resolverId + &quot;, amount=&quot;</span>
+				+ amount + &quot;, timeSubmitted=&quot; + timeSubmitted + &quot;, timeResolved=&quot; + timeResolved
+				+ &quot;, ticketDescription=&quot; + ticketDescription + &quot;, status=&quot; + status + &quot;, type=&quot; + type + &quot;]&quot;;
+	}
+	
+	
+	
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

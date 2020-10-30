@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlainTextConnectionUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ReimbursementSystem</a> &gt; <a href="index.source.html" class="el_package">com.reimbursement.util</a> &gt; <span class="el_source">PlainTextConnectionUtil.java</span></div><h1>PlainTextConnectionUtil.java</h1><pre class="source lang-java linenums">package com.reimbursement.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+
+import com.reimbursement.repo.TicketDAO;
+
+public class PlainTextConnectionUtil {
+	
+//		Class.forName(&quot;org.postgresql.Driver&quot;);
+	
+<span class="fc" id="L15">	private static Logger log = Logger.getLogger(TicketDAO.class);</span>
+	
+	{
+		try {
+<span class="fc" id="L19">			Class.forName(&quot;org.postgresql.Driver&quot;);</span>
+<span class="nc" id="L20">		} catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L21">			e.printStackTrace();</span>
+<span class="fc" id="L22">		}</span>
+	
+	}
+	
+	//may have to adjust url/////////////////////
+<span class="fc" id="L27">		private final String url = &quot;jdbc:postgresql://naugledatabase.ct9itnphbbno.us-east-2.rds.amazonaws.com:5432/postgres?currentSchema=public&quot;;</span>
+<span class="fc" id="L28">		private final String usr = &quot;nauglesteve&quot;;</span>
+<span class="fc" id="L29">		private final String pwd = &quot;s123456N&quot;;</span>
+
+		// to make a singleton
+		private static PlainTextConnectionUtil instance;
+
+		private PlainTextConnectionUtil() {
+<span class="fc" id="L35">			super();</span>
+			// TODO Auto-generated constructor stub
+<span class="fc" id="L37">		}</span>
+
+		public static PlainTextConnectionUtil getInstance() {
+<span class="fc" id="L40">			log.info(&quot;in PlainTextConnectionUtil.getInstance()&quot;);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">			if (instance == null) {</span>
+<span class="fc" id="L42">				instance = new PlainTextConnectionUtil();</span>
+			}
+<span class="fc" id="L44">			return instance;</span>
+		}
+
+		
+		// to create a connection to the db
+		public Connection getConnection() throws SQLException {
+<span class="fc" id="L50">			log.info(&quot;in PlainTextConnectionUtil.getConnection()&quot;);</span>
+<span class="fc" id="L51">			return DriverManager.getConnection(url, usr, pwd);</span>
+		}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

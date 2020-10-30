@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TicketDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ReimbursementSystem</a> &gt; <a href="index.source.html" class="el_package">com.reimbursement.repo</a> &gt; <span class="el_source">TicketDAO.java</span></div><h1>TicketDAO.java</h1><pre class="source lang-java linenums">package com.reimbursement.repo;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+
+import com.reimbursement.model.ReimbursementStatusEnum;
+import com.reimbursement.model.ReimbursementTypeEnum;
+import com.reimbursement.model.Ticket;
+import com.reimbursement.util.PlainTextConnectionUtil;
+
+
+<span class="fc" id="L19">public class TicketDAO implements DAO&lt;Ticket&gt; {</span>
+	
+<span class="fc" id="L21">private static Logger log = Logger.getLogger(TicketDAO.class);</span>
+
+////////////////////// Resolve getInstance() below ////////////////////////////
+	
+	public ArrayList&lt;Ticket&gt; ticketMaker(ResultSet results) throws SQLException{
+<span class="nc" id="L26">		log.info(&quot;in TicketDAO.ticketMaker()&quot;);</span>
+<span class="nc" id="L27">		ArrayList&lt;Ticket&gt; ticketList = new ArrayList&lt;&gt;();</span>
+		
+<span class="nc bnc" id="L29" title="All 2 branches missed.">		while(results.next()) {</span>
+			
+<span class="nc" id="L31">			Ticket temp = new Ticket();</span>
+<span class="nc" id="L32">			temp.setReimbId(results.getInt(&quot;reimb_id&quot;));</span>
+<span class="nc" id="L33">			temp.setAuthorId(results.getInt(&quot;author_id&quot;));</span>
+<span class="nc" id="L34">			temp.setAmount(results.getDouble(&quot;reimb_amount&quot;));			</span>
+<span class="nc" id="L35">			temp.setStatus(ReimbursementStatusEnum.valueOf(results.getString(&quot;reimb_status&quot;)));</span>
+<span class="nc" id="L36">			temp.setType(ReimbursementTypeEnum.valueOf(results.getString(&quot;reimb_type&quot;)));</span>
+<span class="nc" id="L37">			temp.setResolverId(results.getInt(&quot;resolver_id&quot;));</span>
+<span class="nc" id="L38">			temp.setTicketDescription(results.getString(&quot;reimb_description&quot;));</span>
+			
+			
+<span class="nc bnc" id="L41" title="All 2 branches missed.">			if(results.getString(&quot;reimb_resolved&quot;) == null) {</span>
+<span class="nc" id="L42">				temp.setTimeResolved(&quot;N/A&quot;);</span>
+			}else {
+<span class="nc" id="L44">				temp.setTimeResolved(results.getString(&quot;reimb_resolved&quot;));</span>
+			}
+			
+<span class="nc bnc" id="L47" title="All 2 branches missed.">			if(results.getString(&quot;reimb_submitted&quot;) == null) {</span>
+<span class="nc" id="L48">				temp.setTimeSubmitted(&quot;N/A&quot;);</span>
+			}else {
+<span class="nc" id="L50">				temp.setTimeSubmitted(results.getString(&quot;reimb_submitted&quot;));</span>
+			}
+			
+<span class="nc" id="L53">			ticketList.add(temp);</span>
+<span class="nc" id="L54">		}</span>
+<span class="nc" id="L55">		return ticketList;</span>
+	}
+	
+	public ArrayList&lt;Ticket&gt; getByAuthorId(int authorId){
+<span class="nc" id="L59">		log.info(&quot;in TicketDAO.getByAuthorId()&quot;);</span>
+		
+		
+<span class="nc" id="L62">		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {</span>
+			
+<span class="nc" id="L64">			CallableStatement cstmt = conn.prepareCall(&quot;{CALL get_reimbursement_by_id(?, ?)}&quot;); //call from SQL not working - troubleshoot</span>
+<span class="nc" id="L65">			cstmt.setInt(1, authorId);</span>
+
+<span class="nc" id="L67">			cstmt.registerOutParameter(2, Types.REF_CURSOR);           //testing the ref_cursor out, may have to change</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">			if(!cstmt.execute()) {</span>
+<span class="nc" id="L69">				return ticketMaker((ResultSet)cstmt.getObject(2));</span>
+			}
+			
+<span class="nc" id="L72">		}catch(SQLException e) {</span>
+<span class="nc" id="L73">			log.error(e.getMessage());</span>
+<span class="nc" id="L74">		}</span>
+		
+		
+<span class="nc" id="L77">		return null;</span>
+	}
+
+	@Override
+	public ArrayList&lt;Ticket&gt; getAll() {
+<span class="nc" id="L82">		log.info(&quot;in TicketDAO.getAll()&quot;);</span>
+<span class="nc" id="L83">		ArrayList&lt;Ticket&gt; tickets = new ArrayList&lt;&gt;();</span>
+	
+<span class="nc" id="L85">		String sql = &quot;select * from reimb_status_view&quot;;</span>
+		
+<span class="nc" id="L87">		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {</span>
+			
+<span class="nc" id="L89">			PreparedStatement cstmt = conn.prepareStatement(sql);</span>
+<span class="nc" id="L90">			ResultSet rs = cstmt.executeQuery();</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">			while(rs.next()) {</span>
+	//			tickets.add(new Ticket(0, rs.getString(&quot;reimb_id&quot;), rs.getInt(&quot;reimb_amount&quot;), rs.getTimestamp(&quot;reimb_submitted&quot;), rs.getString(&quot;reimb_description&quot;), rs.getBlob(&quot;reimb_receipt&quot;), rs.getString(&quot;reimb_status&quot;), rs.getString(&quot;reimb_type&quot;), rs.getString(&quot;author_fn&quot;), rs.getString(&quot;author_ln&quot;)));
+			
+<span class="nc" id="L94">					return ticketMaker(rs);</span>
+				}
+<span class="nc" id="L96">					rs.close();</span>
+<span class="nc" id="L97">					cstmt.close();</span>
+			
+//			reimb_id, reimb_amount, reimb_submitted, reimb_resolved , reimb_description, reimb_receipt, s.reimb_status, t.reimb_type,
+//	        u.user_first_name
+//			CallableStatement cstmt = conn.prepareCall(&quot;{CALL get_all_reimbursements(?)}&quot;); //call from SQL not working - troubleshoot
+//			
+//
+//			cstmt.registerOutParameter(1,  Types.REF_CURSOR);         // testing the ref_cursor out, may have to change
+//			
+			//we want .execute to return false
+//			if(!cstmt.execute()) {
+//				ResultSet rs = (ResultSet)cstmt.getObject(1);
+//		
+//				return ticketMaker(rs);
+//			}
+			
+<span class="nc" id="L113">		}catch(SQLException e) {</span>
+<span class="nc" id="L114">			log.error(e.getMessage());</span>
+<span class="nc" id="L115">		}</span>
+		
+<span class="nc" id="L117">		return tickets;   //originally it is return null;</span>
+	}
+
+	@Override
+	public Ticket getById(int ticketId) {
+<span class="fc" id="L122">		log.info(&quot;in TicketDAO.getBuId()&quot;);</span>
+		
+<span class="fc" id="L124">		Ticket ticket = new Ticket();</span>
+		
+
+		
+<span class="fc" id="L128">		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {</span>
+			
+<span class="fc" id="L130">			PreparedStatement pstmt = conn.prepareStatement(&quot;SELECT * FROM ers_reimbursement WHERE reimb_id = ?&quot;);</span>
+<span class="fc" id="L131">			pstmt.setInt(1, ticketId);</span>
+			
+<span class="fc" id="L133">			ResultSet rs = pstmt.executeQuery();</span>
+			
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">			while(rs.next()) {</span>
+<span class="nc" id="L136">				ticket.setReimbId(rs.getInt(&quot;reimb_id&quot;));</span>
+<span class="nc" id="L137">				ticket.setAmount(rs.getDouble(&quot;reimb_amount&quot;));</span>
+<span class="nc" id="L138">				ticket.setTimeSubmitted(rs.getString(&quot;reimb_submitted&quot;));</span>
+<span class="nc" id="L139">				ticket.setTimeResolved(rs.getString(&quot;reimb_resolved&quot;));</span>
+<span class="nc" id="L140">				ticket.setTicketDescription(rs.getString(&quot;reimb_description&quot;));</span>
+<span class="nc" id="L141">				ticket.setAuthorId(rs.getInt(&quot;reimb_author&quot;));</span>
+<span class="nc" id="L142">				ticket.setResolverId(rs.getInt(&quot;reimb_resolver&quot;));</span>
+				
+<span class="nc bnc" id="L144" title="All 4 branches missed.">				switch(rs.getInt(&quot;reimb_status_id&quot;)) {</span>
+				case 0:
+<span class="nc" id="L146">					ticket.setStatus(ReimbursementStatusEnum.PENDING);</span>
+<span class="nc" id="L147">					break;</span>
+				case 1:
+<span class="nc" id="L149">					ticket.setStatus(ReimbursementStatusEnum.APPROVED);</span>
+<span class="nc" id="L150">					break;</span>
+				case 2:
+<span class="nc" id="L152">					ticket.setStatus(ReimbursementStatusEnum.DENIED);</span>
+					break;
+				}
+				
+<span class="nc bnc" id="L156" title="All 5 branches missed.">				switch(rs.getInt(&quot;reimb_type_id&quot;)) {</span>
+				case 1:
+<span class="nc" id="L158">					ticket.setType(ReimbursementTypeEnum.LODGING);</span>
+<span class="nc" id="L159">					break;</span>
+				case 2:
+<span class="nc" id="L161">					ticket.setType(ReimbursementTypeEnum.TRAVEL);</span>
+<span class="nc" id="L162">					break;</span>
+				case 3:
+<span class="nc" id="L164">					ticket.setType(ReimbursementTypeEnum.FOOD);</span>
+<span class="nc" id="L165">					break;</span>
+				case 4:
+<span class="nc" id="L167">					ticket.setType(ReimbursementTypeEnum.OTHER);</span>
+<span class="nc" id="L168">					break;</span>
+				}
+			}
+			
+<span class="nc" id="L172">		}catch(SQLException e) {</span>
+<span class="nc" id="L173">			log.error(e.getMessage());</span>
+<span class="fc" id="L174">		}</span>
+		
+<span class="fc" id="L176">		return ticket;</span>
+	}
+
+	@Override
+	public Ticket add(Ticket obj) {
+<span class="nc" id="L181">		log.info(&quot;in TicketDAO.add()&quot;);</span>
+		
+		
+<span class="nc" id="L184">		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {</span>
+<span class="nc" id="L185">			conn.setAutoCommit(false);</span>
+			
+<span class="nc" id="L187">			String [] keys = new String[1];</span>
+<span class="nc" id="L188">			keys[0] = &quot;reimb_id&quot;;</span>
+<span class="nc" id="L189">			PreparedStatement pstmt = conn.prepareStatement(&quot;INSERT INTO ers_reimbursement VALUES (0,?,null,null,?,null,?,null,0,?)&quot;, keys);</span>
+<span class="nc" id="L190">			pstmt.setDouble(1, obj.getAmount());</span>
+<span class="nc" id="L191">			pstmt.setString(2, obj.getTicketDescription());</span>
+<span class="nc" id="L192">			pstmt.setInt(3, obj.getAuthorId());</span>
+<span class="nc bnc" id="L193" title="All 5 branches missed.">			switch(obj.getType()) {</span>
+				case LODGING:
+<span class="nc" id="L195">					pstmt.setInt(4, 1);</span>
+<span class="nc" id="L196">					break;</span>
+				case TRAVEL:
+<span class="nc" id="L198">					pstmt.setInt(4, 2);</span>
+<span class="nc" id="L199">					break;</span>
+				case FOOD:
+<span class="nc" id="L201">					pstmt.setInt(4, 3);</span>
+<span class="nc" id="L202">					break;</span>
+				case OTHER:
+<span class="nc" id="L204">					pstmt.setInt(4, 4);</span>
+<span class="nc" id="L205">					break;</span>
+				default:
+<span class="nc" id="L207">					return null;</span>
+			}
+			
+<span class="nc" id="L210">			int rowsInserted = pstmt.executeUpdate();</span>
+<span class="nc" id="L211">			ResultSet rs = pstmt.getGeneratedKeys();</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">			if(rowsInserted != 0) {</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">				while(rs.next()) {</span>
+<span class="nc" id="L214">					obj.setReimbId(rs.getInt(1));</span>
+				}
+<span class="nc" id="L216">				conn.commit();</span>
+			}
+<span class="nc" id="L218">		}catch(SQLException e) {</span>
+<span class="nc" id="L219">			log.error(e.getMessage());</span>
+<span class="nc" id="L220">		}</span>
+		
+<span class="nc bnc" id="L222" title="All 2 branches missed.">		if(obj.getReimbId() == 0) {</span>
+<span class="nc" id="L223">			return null;</span>
+		}
+<span class="nc" id="L225">		return obj;</span>
+	}
+
+	public ArrayList&lt;Ticket&gt; update(ArrayList&lt;Ticket&gt; updatedTickets) {
+<span class="nc" id="L229">		log.info(&quot;in TicketDAO.update()&quot;);</span>
+<span class="nc" id="L230">		ArrayList&lt;Ticket&gt; newTicketList = new ArrayList&lt;&gt;();</span>
+		
+		
+<span class="nc" id="L233">		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {</span>
+<span class="nc" id="L234">			conn.setAutoCommit(false);</span>
+			
+<span class="nc" id="L236">			String sql = &quot;UPDATE ers_reimbursement SET reimb_status_id = ?, reimb_resolver = ? WHERE reimb_id = ?&quot;;</span>
+			
+			
+<span class="nc" id="L239">			PreparedStatement pstmt = conn.prepareStatement(sql);</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">			for(Ticket t : updatedTickets) {</span>
+<span class="nc" id="L241">				pstmt.setInt(1, t.getStatusId());</span>
+<span class="nc" id="L242">				pstmt.setInt(2, t.getResolverId());</span>
+<span class="nc" id="L243">				pstmt.setInt(3, t.getReimbId());</span>
+				
+<span class="nc bnc" id="L245" title="All 2 branches missed.">				if(pstmt.executeUpdate() == 0) {</span>
+<span class="nc" id="L246">					return null;</span>
+				}
+<span class="nc" id="L248">				newTicketList.add(t);</span>
+<span class="nc" id="L249">			}</span>
+<span class="nc" id="L250">			conn.commit();</span>
+<span class="nc" id="L251">			return newTicketList;</span>
+			
+<span class="nc" id="L253">		}catch(SQLException e) {</span>
+<span class="nc" id="L254">			log.error(e.getMessage());</span>
+		}
+		
+<span class="nc" id="L257">		return null;</span>
+	}
+
+	@Override
+	public boolean delete(int id) {
+<span class="nc" id="L262">		log.info(&quot;in TicketDAO.delete()&quot;);</span>
+<span class="nc" id="L263">		return false;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

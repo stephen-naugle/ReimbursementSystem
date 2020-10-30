@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JWTFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ReimbursementSystem</a> &gt; <a href="index.source.html" class="el_package">com.reimbursement.servlets</a> &gt; <span class="el_source">JWTFilter.java</span></div><h1>JWTFilter.java</h1><pre class="source lang-java linenums">package com.reimbursement.servlets;
+
+import java.io.IOException;
+
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpFilter;
+
+import org.apache.log4j.Logger;
+
+import com.reimbursement.model.Principal;
+import com.reimbursement.util.JWTConfig;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
+////// compare to see why error is popping up /////////////
+
+@WebFilter(&quot;/*&quot;)
+<span class="nc" id="L24">public class JWTFilter extends HttpFilter {</span>
+	
+	private static final long serialVersionUID = 1L;
+<span class="nc" id="L27">	private static Logger log = Logger.getLogger(JWTFilter.class);</span>
+
+	//@Override
+	public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
+<span class="nc" id="L31">		log.info(&quot;Inside of JWTFilter.doFilter()&quot;);</span>
+		
+		// 1. Get the HTTP header named &quot;Authorization&quot;
+<span class="nc" id="L34">		String header = req.getHeader(JWTConfig.HEADER);</span>
+<span class="nc" id="L35">		log.info(header);</span>
+		
+		// 2. Validate the header values and check the prefix
+<span class="nc bnc" id="L38" title="All 4 branches missed.">		if(header == null || !header.startsWith(JWTConfig.PREFIX)) {</span>
+<span class="nc" id="L39">			log.info(&quot;Request originates from an unauthenticated origin&quot;);</span>
+			
+			// 2.1: If there is no header, or one that we provided, then go to the next step in the filter chain (target servlet)
+<span class="nc" id="L42">			chain.doFilter(req, resp);</span>
+<span class="nc" id="L43">			return;</span>
+		}
+		
+		// 3. Get the token
+<span class="nc" id="L47">		String token = header.replaceAll(JWTConfig.PREFIX, &quot;&quot;);</span>
+		
+<span class="nc" id="L49">		log.info(&quot;Request is authenteticated&quot;);</span>
+		try {
+			
+			// 4. Validate the token
+<span class="nc" id="L53">			Claims claims = Jwts.parser()</span>
+<span class="nc" id="L54">					.setSigningKey(JWTConfig.signingKey)</span>
+<span class="nc" id="L55">					.parseClaimsJws(token)</span>
+<span class="nc" id="L56">					.getBody();</span>
+			
+			// 5. Obtain the principal/subject stored in the JWT
+<span class="nc" id="L59">			Principal principal = new Principal();</span>
+<span class="nc" id="L60">			principal.setId(claims.getId());</span>
+<span class="nc" id="L61">			principal.setRole(claims.get(&quot;role&quot;, String.class));</span>
+			
+			// 6. Attach an attribute to the request indicating information about the principal
+<span class="nc" id="L64">			req.setAttribute(&quot;principal&quot;, principal);</span>
+			
+<span class="nc" id="L66">		} catch (Exception e) {</span>
+<span class="nc" id="L67">			log.error(e.getMessage());</span>
+<span class="nc" id="L68">		}</span>
+		
+		// 7. Send the request to the next filter in the chain (target servlet)
+<span class="nc" id="L71">		chain.doFilter(req, resp);</span>
+<span class="nc" id="L72">	}</span>
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+<span class="nc" id="L78">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

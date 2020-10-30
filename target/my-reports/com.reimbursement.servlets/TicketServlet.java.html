@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TicketServlet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ReimbursementSystem</a> &gt; <a href="index.source.html" class="el_package">com.reimbursement.servlets</a> &gt; <span class="el_source">TicketServlet.java</span></div><h1>TicketServlet.java</h1><pre class="source lang-java linenums">package com.reimbursement.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reimbursement.model.Principal;
+import com.reimbursement.model.ReimbursementStatusEnum;
+import com.reimbursement.model.ReimbursementTypeEnum;
+import com.reimbursement.model.Ticket;
+import com.reimbursement.service.TicketService;
+import com.web.exceptions.NegativeAmountException;
+
+@WebServlet(&quot;/ticket&quot;)
+<span class="fc" id="L25">public class TicketServlet extends HttpServlet{</span>
+	
+	private static final long serialVersionUID = 1L;
+<span class="fc" id="L28">	private static Logger log = Logger.getLogger(TicketServlet.class);</span>
+<span class="fc" id="L29">	private TicketService service = new TicketService();</span>
+<span class="fc" id="L30">	private Ticket ticket = new Ticket();</span>
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+<span class="nc" id="L35">		ObjectMapper mapper = new ObjectMapper();</span>
+		
+		
+		try {
+<span class="nc" id="L39">			PrintWriter pw = resp.getWriter();</span>
+<span class="nc" id="L40">			Principal principal = (Principal) req.getAttribute(&quot;principal&quot;);</span>
+<span class="nc" id="L41">			ArrayList&lt;Ticket&gt; tickets = new ArrayList&lt;&gt;();    ////////////////////////////////////////was null, test out new list</span>
+			
+<span class="nc bnc" id="L43" title="All 2 branches missed.">			if(principal.getRole().equalsIgnoreCase(&quot;manager&quot;)) {</span>
+<span class="nc" id="L44">				resp.setHeader(&quot;UserRole&quot;, &quot;manager&quot;);</span>
+<span class="nc" id="L45">				System.out.println(&quot;in manager ticket try for id: &quot; + principal.getId());</span>
+<span class="nc" id="L46">				tickets = service.getAll();</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">				for(Ticket t : tickets) {</span>
+<span class="nc" id="L48">					System.out.println(t);</span>
+<span class="nc" id="L49">				}</span>
+				
+<span class="nc bnc" id="L51" title="All 2 branches missed.">			}else if(principal.getRole().equalsIgnoreCase(&quot;employee&quot;)) {</span>
+<span class="nc" id="L52">				resp.setHeader(&quot;UserRole&quot;, &quot;employee&quot;);</span>
+<span class="nc" id="L53">				System.out.println(&quot;in employee ticket try for id: &quot; + principal.getId());</span>
+<span class="nc" id="L54">				tickets = service.getByAuthorId(Integer.parseInt(principal.getId()));</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">				for(Ticket t : tickets) {</span>
+<span class="nc" id="L56">					System.out.println(t);</span>
+<span class="nc" id="L57">				}				</span>
+		
+			}
+<span class="nc" id="L60">			resp.setHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);</span>
+<span class="nc" id="L61">			resp.setHeader(&quot;UserId&quot;, principal.getId());</span>
+<span class="nc" id="L62">			mapper.writeValue(pw, tickets);</span>
+<span class="nc" id="L63">			log.info(&quot;tickets have been sent&quot;);</span>
+			
+<span class="nc" id="L65">		}catch(JsonProcessingException jpe) {</span>
+<span class="nc" id="L66">			log.error(jpe.getMessage());</span>
+			
+<span class="nc" id="L68">		}catch(Exception e) {</span>
+<span class="nc" id="L69">			log.error(e.getMessage());</span>
+<span class="nc" id="L70">		}</span>
+		
+<span class="nc" id="L72">	}</span>
+
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+<span class="nc" id="L77">		log.info(&quot;in TicketServlet doPost()&quot;);</span>
+		
+<span class="nc" id="L79">		ObjectMapper mapper = new ObjectMapper();</span>
+<span class="nc" id="L80">		String[] ticketData = null;</span>
+<span class="nc" id="L81">		ArrayList&lt;Ticket&gt; tickets = new ArrayList&lt;&gt;();</span>
+		
+		try {
+<span class="nc" id="L84">			ticketData = mapper.readValue(req.getInputStream(), String[].class);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">			for(String s : ticketData) {</span>
+<span class="nc" id="L86">				log.info(s);</span>
+			}
+			
+<span class="nc bnc" id="L89" title="All 2 branches missed.">			if(ticketData[0].equals(&quot;add&quot;)) {</span>
+<span class="nc" id="L90">				log.info(&quot;adding ticket&quot;);</span>
+<span class="nc" id="L91">				ticket.setAuthorId(Integer.parseInt(ticketData[1]));</span>
+<span class="nc" id="L92">				ticket.setAmount(Double.parseDouble(ticketData[2]));</span>
+<span class="nc" id="L93">				ticket.setType(ReimbursementTypeEnum.valueOf(ticketData[3]));</span>
+<span class="nc" id="L94">				ticket.setTicketDescription(ticketData[4]);</span>
+				
+<span class="nc" id="L96">				ticket = service.add(ticket);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">				if(ticket != null) {</span>
+<span class="nc" id="L98">					resp.setStatus(200);</span>
+				}else {
+<span class="nc" id="L100">					resp.setStatus(400);</span>
+				}
+<span class="nc bnc" id="L102" title="All 2 branches missed.">			} else if(ticketData[0].equals(&quot;update&quot;)) {</span>
+<span class="nc" id="L103">				log.info(&quot;updating ticket&quot;);</span>
+				
+<span class="nc" id="L105">				ticket.setAuthorId(Integer.parseInt(ticketData[1]));</span>
+<span class="nc" id="L106">				ticket.setResolverId(Integer.parseInt(ticketData[2]));</span>
+<span class="nc" id="L107">				ticket.setReimbId(Integer.parseInt(ticketData[3]));</span>
+<span class="nc" id="L108">				ticket.setStatus(ReimbursementStatusEnum.valueOf(ticketData[4]));</span>
+<span class="nc" id="L109">				tickets.add(ticket);</span>
+				
+<span class="nc" id="L111">				tickets = service.update(tickets);</span>
+				
+<span class="nc bnc" id="L113" title="All 2 branches missed.">				if(ticket != null) {</span>
+<span class="nc" id="L114">					resp.setStatus(200);</span>
+				} else {
+<span class="nc" id="L116">					resp.setStatus(400);</span>
+				}
+				
+			}
+
+			
+			
+<span class="nc" id="L123">		} catch(NegativeAmountException nae) {</span>
+<span class="nc" id="L124">			log.error(nae.getMessage());</span>
+<span class="nc" id="L125">			resp.setStatus(400);</span>
+<span class="nc" id="L126">		} catch(Exception e) {</span>
+<span class="nc" id="L127">			log.error(e.getMessage());</span>
+<span class="nc" id="L128">			resp.setStatus(400);</span>
+<span class="nc" id="L129">		}</span>
+<span class="nc" id="L130">	}</span>
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

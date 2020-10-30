@@ -1,0 +1,32 @@
+.row{
+    margin-top: 5%;
+}
+table{
+    border: black 2px;
+}
+#news{
+    
+    background-color: lightgrey;
+    border-radius: 2em;
+}
+#news p{
+    padding: 1% 10%;
+}
+#newsheader{
+    display: inline-block;
+    color: white;
+    padding: 0.8em 0.7em 0 0.7em;
+    width: 100%;
+    background-color: #607D8B;
+    line-height: 1em;
+    border-radius: 1em 1em 0 0;
+}
+#ticket-zone{
+    width: 50%;
+}
+input{
+    margin-bottom: 10px;
+}
+#create-ticket-btn{
+    margin-top: 10px;
+}

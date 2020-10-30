@@ -1,0 +1,16 @@
+.form-signin{
+    margin: auto;
+    padding: 1em;
+    width: 50%;
+    border-style: inset;
+    border-radius: 1em;
+}
+h1{
+    text-align: center;
+}
+.alert-msg{
+    margin: 20px 0px;
+    background: #ffb3b3;
+    border: 1px;
+    border-radius: 3px;
+}
