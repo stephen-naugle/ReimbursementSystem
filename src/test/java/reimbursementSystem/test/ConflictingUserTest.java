@@ -5,8 +5,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.web.exceptions.ConflictingUserException;
-import com.web.exceptions.SelfResolverException;
+import com.reimbursement.controller.ConflictingUserException;
+import com.reimbursement.controller.SelfResolverException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ConflictingUserTest {

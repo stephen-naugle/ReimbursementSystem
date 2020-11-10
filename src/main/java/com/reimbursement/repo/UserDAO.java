@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.repo;
 
 import java.sql.Connection;
@@ -48,8 +53,7 @@ private static Logger log = Logger.getLogger(UserDAO.class);
 		
 		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {
 			
-			//getting errors when trying to login as a manager
-			//Could try a hard-code here for testing purposes
+			//Ok - now able to login as manager role and user role
 			
 			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM ers_users u JOIN ers_user_roles r ON u.user_role_id = r.ers_user_role_id WHERE ers_username = ? AND ers_password = ?");
 			pstmt.setString(1, username);
@@ -147,7 +151,7 @@ private static Logger log = Logger.getLogger(UserDAO.class);
 	public User add(User newUser) {
 		log.info("in UserDAO.add()");
 		
-		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {          // testing this out, may have to change
+		try(Connection conn = PlainTextConnectionUtil.getInstance().getConnection()) {          // testing -- Ok, now working
 			conn.setAutoCommit(false);
 			
 			String[] keys = new String[1];

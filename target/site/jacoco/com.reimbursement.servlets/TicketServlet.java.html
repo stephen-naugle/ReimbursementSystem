@@ -14,12 +14,12 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reimbursement.controller.NegativeAmountException;
 import com.reimbursement.model.Principal;
 import com.reimbursement.model.ReimbursementStatusEnum;
 import com.reimbursement.model.ReimbursementTypeEnum;
 import com.reimbursement.model.Ticket;
 import com.reimbursement.service.TicketService;
-import com.web.exceptions.NegativeAmountException;
 
 @WebServlet(&quot;/ticket&quot;)
 <span class="fc" id="L25">public class TicketServlet extends HttpServlet{</span>

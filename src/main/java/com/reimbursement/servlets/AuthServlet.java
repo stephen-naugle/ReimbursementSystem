@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.servlets;
 
 import java.io.IOException;
@@ -13,14 +18,13 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.reimbursement.controller.ConflictingUserException;
+import com.reimbursement.controller.InvalidInputException;
+import com.reimbursement.controller.UserNotFoundException;
 import com.reimbursement.model.User;
 import com.reimbursement.model.UserRoleEnum;
 import com.reimbursement.service.UserService;
-import com.reimbursement.util.JWTConfig;
-import com.reimbursement.util.JWTGenerator;
-import com.web.exceptions.ConflictingUserException;
-import com.web.exceptions.InvalidInputException;
-import com.web.exceptions.UserNotFoundException;
+
 
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
@@ -63,7 +67,6 @@ public class AuthServlet extends HttpServlet {
 
 				
 				resp.setStatus(200);
-				resp.addHeader(JWTConfig.HEADER, JWTConfig.PREFIX + JWTGenerator.createJwt(user));
 				resp.addHeader("userId", String.valueOf(user.getUserId()));
 				resp.addHeader("username", user.getUsername());
 			

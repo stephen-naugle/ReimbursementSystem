@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.model;
 
 import java.time.LocalDateTime;
@@ -217,9 +222,6 @@ public class Ticket {
 				+ amount + ", timeSubmitted=" + timeSubmitted + ", timeResolved=" + timeResolved
 				+ ", ticketDescription=" + ticketDescription + ", status=" + status + ", type=" + type + "]";
 	}
-	
-	
-	
 }
 
 

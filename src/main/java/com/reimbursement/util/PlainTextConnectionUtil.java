@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.util;
 
 import java.sql.Connection;
@@ -26,7 +31,7 @@ public class PlainTextConnectionUtil {
 	//may have to adjust url/////////////////////
 		private final String url = "jdbc:postgresql://naugledatabase.ct9itnphbbno.us-east-2.rds.amazonaws.com:5432/postgres?currentSchema=public";
 		private final String usr = "nauglesteve";
-		private final String pwd = "s123456N";
+		private final String pwd = "wasspord";
 
 		// to make a singleton
 		private static PlainTextConnectionUtil instance;

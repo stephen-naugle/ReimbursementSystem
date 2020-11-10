@@ -1,4 +1,4 @@
-package com.web.exceptions;
+package com.reimbursement.controller;
 
 public class UserNotFoundException extends Exception {
 	

@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.servlets;
 
 import java.io.IOException;
@@ -14,12 +19,12 @@ import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reimbursement.controller.NegativeAmountException;
 import com.reimbursement.model.Principal;
 import com.reimbursement.model.ReimbursementStatusEnum;
 import com.reimbursement.model.ReimbursementTypeEnum;
 import com.reimbursement.model.Ticket;
 import com.reimbursement.service.TicketService;
-import com.web.exceptions.NegativeAmountException;
 
 @WebServlet("/ticket")
 public class TicketServlet extends HttpServlet{
@@ -38,7 +43,7 @@ public class TicketServlet extends HttpServlet{
 		try {
 			PrintWriter pw = resp.getWriter();
 			Principal principal = (Principal) req.getAttribute("principal");
-			ArrayList<Ticket> tickets = new ArrayList<>();    ////////////////////////////////////////was null, test out new list
+			ArrayList<Ticket> tickets = new ArrayList<>();    
 			
 			if(principal.getRole().equalsIgnoreCase("manager")) {
 				resp.setHeader("UserRole", "manager");

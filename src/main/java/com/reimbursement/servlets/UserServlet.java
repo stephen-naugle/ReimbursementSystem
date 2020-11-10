@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.servlets;
 
 import java.io.IOException;
@@ -32,11 +37,11 @@ public class UserServlet extends HttpServlet{
 			out.write(usersJSON);
 			
 		} catch (NumberFormatException nfe) {
-//			log.error(nfe.getMessage());
+
 			resp.setStatus(400);
 		} catch (Exception e) {
 			e.printStackTrace();
-//		log.error(e.getMessage());
+
 			resp.setStatus(500);
 		}
 

@@ -1,13 +1,18 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.service;
 
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import com.reimbursement.controller.NegativeAmountException;
+import com.reimbursement.controller.SelfResolverException;
 import com.reimbursement.model.Ticket;
 import com.reimbursement.repo.TicketDAO;
-import com.web.exceptions.NegativeAmountException;
-import com.web.exceptions.SelfResolverException;
 
 public class TicketService {
 	
@@ -34,7 +39,7 @@ public class TicketService {
 	public Ticket add(Ticket newTicket) throws NegativeAmountException{
 		log.info("in TicketService.add()");
 		if(newTicket.getAmount() <= 0 ) {
-			throw new NegativeAmountException("cannot make a ticket with a negative or 0 amount");
+			throw new NegativeAmountException("Unable to create ticket with a negative or 0 amount. Please try again.");
 		}
 		return ticketDao.add(newTicket);
 	}

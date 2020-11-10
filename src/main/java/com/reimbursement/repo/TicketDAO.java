@@ -1,3 +1,8 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.repo;
 
 import java.sql.Connection;
@@ -20,7 +25,7 @@ public class TicketDAO implements DAO<Ticket> {
 	
 private static Logger log = Logger.getLogger(TicketDAO.class);
 
-////////////////////// Resolve getInstance() below ////////////////////////////
+
 	
 	public ArrayList<Ticket> ticketMaker(ResultSet results) throws SQLException{
 		log.info("in TicketDAO.ticketMaker()");
@@ -28,7 +33,6 @@ private static Logger log = Logger.getLogger(TicketDAO.class);
 		
 //		Timestamp ts = Timestamp.valueOf(LocalDateTime.now("UTC"));
 	
-		
 		while(results.next()) {
 			
 			Ticket temp = new Ticket();
@@ -47,7 +51,7 @@ private static Logger log = Logger.getLogger(TicketDAO.class);
 				temp.setTimeResolved(LocalDateTime.of(2020, 10, 28, 15, 33));
 			}
 			
-			if(results.getTimestamp("reimb_submitted") == null) {                   //Testing getObject instead of getString
+			if(results.getTimestamp("reimb_submitted") == null) {               //Testing getObject instead of getString
 				temp.setTimeSubmitted(LocalDateTime.now());
 			}else {
 				temp.setTimeSubmitted(LocalDateTime.of(2020, 10, 29, 14, 22));
@@ -68,21 +72,11 @@ private static Logger log = Logger.getLogger(TicketDAO.class);
 				PreparedStatement cstmt = conn.prepareStatement(sql);
 				ResultSet rs = cstmt.executeQuery();
 				while(rs.next()) {
-		//			tickets.add(new Ticket(0, rs.getString("reimb_id"), rs.getInt("reimb_amount"), rs.getTimestamp("reimb_submitted"), rs.getString("reimb_description"), rs.getBlob("reimb_receipt"), rs.getString("reimb_status"), rs.getString("reimb_type"), rs.getString("author_fn"), rs.getString("author_ln")));
 				
 						return ticketMaker(rs);
 					}
 						rs.close();
 						cstmt.close();
-		
-//			Commenting out to test another method as Callable is giving me issues			
-//			CallableStatement cstmt = conn.prepareCall("{CALL get_reimbursement_by_id(?, ?)}"); //call from SQL not working - troubleshoot
-//			cstmt.setInt(1, authorId);
-//
-//			cstmt.registerOutParameter(2, Types.REF_CURSOR);           //testing the ref_cursor out, may have to change
-//			if(!cstmt.execute()) {
-//				return ticketMaker((ResultSet)cstmt.getObject(2));
-//			}
 			
 		}catch(SQLException e) {
 			log.error(e.getMessage());
@@ -104,32 +98,17 @@ private static Logger log = Logger.getLogger(TicketDAO.class);
 			PreparedStatement cstmt = conn.prepareStatement(sql);
 			ResultSet rs = cstmt.executeQuery();
 			while(rs.next()) {
-	//			tickets.add(new Ticket(0, rs.getString("reimb_id"), rs.getInt("reimb_amount"), rs.getTimestamp("reimb_submitted"), rs.getString("reimb_description"), rs.getBlob("reimb_receipt"), rs.getString("reimb_status"), rs.getString("reimb_type"), rs.getString("author_fn"), rs.getString("author_ln")));
 			
 					return ticketMaker(rs);
 				}
 					rs.close();
 					cstmt.close();
 			
-//			reimb_id, reimb_amount, reimb_submitted, reimb_resolved , reimb_description, reimb_receipt, s.reimb_status, t.reimb_type,
-//	        u.user_first_name
-//			CallableStatement cstmt = conn.prepareCall("{CALL get_all_reimbursements(?)}"); //call from SQL not working - troubleshoot
-//			
-//
-//			cstmt.registerOutParameter(1,  Types.REF_CURSOR);         // testing the ref_cursor out, may have to change
-//			
-			//we want .execute to return false
-//			if(!cstmt.execute()) {
-//				ResultSet rs = (ResultSet)cstmt.getObject(1);
-//		
-//				return ticketMaker(rs);
-//			}
-			
 		}catch(SQLException e) {
 			log.error(e.getMessage());
 		}
 		
-		return tickets;   //originally it is return null;
+		return tickets;  
 	}
 
 	@Override

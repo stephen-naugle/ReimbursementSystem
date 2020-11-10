@@ -1,10 +1,10 @@
 package reimbursementSystem.test;
+
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 public class PalindromeTest {
-
 	
 	public boolean isPalindrome(String inputString) {
 	    if (inputString.length() == 0) {
@@ -15,7 +15,7 @@ public class PalindromeTest {
 	        String mid = inputString.substring(1, inputString.length() - 1);
 	        return (firstChar == lastChar) && isPalindrome(mid);
 	    }
-	}
+	}	
 
 @Test
 public void whenEmptyString_thenAccept() {

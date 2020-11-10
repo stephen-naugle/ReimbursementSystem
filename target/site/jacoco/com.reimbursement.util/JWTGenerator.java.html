@@ -32,7 +32,7 @@ public class JWTGenerator {
 <span class="nc" id="L32">				.setExpiration(new Date(nowMillis + JWTConfig.EXPIRATION * 1000))</span>
 <span class="nc" id="L33">				.signWith(signatureAlgorithm, JWTConfig.signingKey);</span>
 		
-<span class="nc" id="L35">		log.info(&quot;Site secured successfully&quot;);</span>
+<span class="nc" id="L35">		log.info(&quot;JWT successfully created&quot;);</span>
 		
 		// Build the JWT and serialize it into a compact, URL-safe string
 <span class="nc" id="L38">		return builder.compact();</span>

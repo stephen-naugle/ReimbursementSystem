@@ -1,14 +1,19 @@
+/**
+ * Created by Stephen Naugle @ Revature
+ */
+
+
 package com.reimbursement.service;
 
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import com.reimbursement.controller.ConflictingUserException;
+import com.reimbursement.controller.InvalidInputException;
+import com.reimbursement.controller.UserNotFoundException;
 import com.reimbursement.model.User;
 import com.reimbursement.repo.UserDAO;
-import com.web.exceptions.ConflictingUserException;
-import com.web.exceptions.InvalidInputException;
-import com.web.exceptions.UserNotFoundException;
 
 public class UserService {
 	
@@ -25,7 +30,7 @@ public class UserService {
 		if(isValid(username) && isValid(password)) {
 			 User gottenUser = userDao.getByCredentials(username, password);
 			 if(gottenUser == null) {
-				 throw new UserNotFoundException("No user with those credentials");
+				 throw new UserNotFoundException("No user exists with those credentials");
 			 }
 			 return gottenUser;
 		} else {

@@ -11,13 +11,13 @@ public class JWTConfig {
 	
 	public static final String URI = &quot;/**&quot;;
 	public static final String HEADER = &quot;Authorization&quot;;
-	public static final String PREFIX = &quot;Naugle.Stephen &quot;;
+	public static final String PREFIX = &quot;Naugle.Steve &quot;;
 	public static final int EXPIRATION = 24 * 60 * 60;
 	public static final String SECRET = &quot;Zubadank&quot;;
 	public static final Key signingKey;
 	
 	static {
-		// Create a signing key using the JWT secret key
+		
 <span class="nc" id="L21">		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;</span>
 <span class="nc" id="L22">		byte[] secretBytes = DatatypeConverter.parseBase64Binary(SECRET);</span>
 <span class="nc" id="L23">		signingKey = new SecretKeySpec(secretBytes, signatureAlgorithm.getJcaName());</span>
